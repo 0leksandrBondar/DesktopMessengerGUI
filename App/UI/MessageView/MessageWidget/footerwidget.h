@@ -20,44 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "messagewidget.h"
+#pragma once
 
-#include "footerwidget.h"
-#include "headerwidget.h"
-#include "textwidget.h"
+#include <QWidget>
 
-#include <QVBoxLayout>
+class QLabel;
 
-MessageWidget::MessageWidget(QWidget* parent)
-    : QWidget(parent), _header{ new HeaderWidget() }, _footer{ new FooterWidget() }
+class FooterWidget final : public QWidget
 {
-    setStyleSheet("border: 0px solid black; background-color: black;");
-    initializeLayout();
-}
+public:
+    explicit FooterWidget(QWidget* parent = nullptr);
 
-void MessageWidget::initializeLayout()
-{
-    const auto mainLayout{ new QVBoxLayout() };
-    mainLayout->setSpacing(0);
-    mainLayout->setAlignment(Qt::AlignTop);
-    mainLayout->setContentsMargins(1, 1, 1, 1);
+private:
+    void initializeLayout();
+    void setupTimeLabel() const;
 
-    mainLayout->addWidget(_header);
-
-    setLayout(mainLayout);
-}
-
-void MessageWidget::addTextWidget(const QString& msgTextData)
-{
-    _text = new TextWidget;
-    _text->setText(msgTextData);
-    layout()->addWidget(_text);
-}
-
-void MessageWidget::addFooterWidget() const { layout()->addWidget(_footer); }
-
-void MessageWidget::addHeaderWidget(const QString& senderName) const
-{
-    _header->setSenderName(senderName);
-    layout()->addWidget(_header);
-}
+private:
+    QLabel* _time{ nullptr };
+};

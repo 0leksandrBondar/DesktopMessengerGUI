@@ -20,44 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "messagewidget.h"
-
 #include "footerwidget.h"
-#include "headerwidget.h"
-#include "textwidget.h"
 
+#include <QDateTime>
+#include <QLabel>
 #include <QVBoxLayout>
 
-MessageWidget::MessageWidget(QWidget* parent)
-    : QWidget(parent), _header{ new HeaderWidget() }, _footer{ new FooterWidget() }
+FooterWidget::FooterWidget(QWidget* parent) : QWidget(parent), _time{ new QLabel }
 {
     setStyleSheet("border: 0px solid black; background-color: black;");
     initializeLayout();
+    setupTimeLabel();
 }
 
-void MessageWidget::initializeLayout()
+void FooterWidget::initializeLayout()
 {
     const auto mainLayout{ new QVBoxLayout() };
     mainLayout->setSpacing(0);
-    mainLayout->setAlignment(Qt::AlignTop);
+    mainLayout->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     mainLayout->setContentsMargins(1, 1, 1, 1);
 
-    mainLayout->addWidget(_header);
+    mainLayout->addWidget(_time);
+
+    resize(30, 20);
 
     setLayout(mainLayout);
 }
 
-void MessageWidget::addTextWidget(const QString& msgTextData)
+void FooterWidget::setupTimeLabel() const
 {
-    _text = new TextWidget;
-    _text->setText(msgTextData);
-    layout()->addWidget(_text);
-}
+    QFont font;
+    font.setPointSize(12);
+    _time->setFont(font);
 
-void MessageWidget::addFooterWidget() const { layout()->addWidget(_footer); }
-
-void MessageWidget::addHeaderWidget(const QString& senderName) const
-{
-    _header->setSenderName(senderName);
-    layout()->addWidget(_header);
+    const QString timeText = QDateTime::currentDateTime().toString("HH:mm");
+    _time->setText(timeText);
 }

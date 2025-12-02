@@ -32,6 +32,8 @@ struct MessageData
     QString sender;
     QString receiver;
     QString textMessage;
+    bool isGroupChat{ false };
+    bool isOwnMessage{ false };
 };
 
 class ChatViewWidget final : public QWidget
@@ -39,8 +41,7 @@ class ChatViewWidget final : public QWidget
 public:
     explicit ChatViewWidget(QWidget* parent = nullptr);
 
-    void addMessage(const QString& msg, const bool isMyMsg = true);
-    void addMessage(const MessageData& msg, const bool isMyMsg = true);
+    void addMessage(const MessageData& msg, bool isMyMsg = true);
 
 private:
     void setupUi();

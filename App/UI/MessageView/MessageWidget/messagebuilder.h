@@ -1,5 +1,3 @@
-// MIT License
-
 // Copyright (c) 2025 Oleksandr
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,44 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "messagewidget.h"
+#pragma once
 
-#include "footerwidget.h"
-#include "headerwidget.h"
-#include "textwidget.h"
+struct MessageData;
+class MessageWidget;
 
-#include <QVBoxLayout>
-
-MessageWidget::MessageWidget(QWidget* parent)
-    : QWidget(parent), _header{ new HeaderWidget() }, _footer{ new FooterWidget() }
+class MessageBuilder final
 {
-    setStyleSheet("border: 0px solid black; background-color: black;");
-    initializeLayout();
-}
+public:
+    MessageBuilder() = default;
 
-void MessageWidget::initializeLayout()
-{
-    const auto mainLayout{ new QVBoxLayout() };
-    mainLayout->setSpacing(0);
-    mainLayout->setAlignment(Qt::AlignTop);
-    mainLayout->setContentsMargins(1, 1, 1, 1);
-
-    mainLayout->addWidget(_header);
-
-    setLayout(mainLayout);
-}
-
-void MessageWidget::addTextWidget(const QString& msgTextData)
-{
-    _text = new TextWidget;
-    _text->setText(msgTextData);
-    layout()->addWidget(_text);
-}
-
-void MessageWidget::addFooterWidget() const { layout()->addWidget(_footer); }
-
-void MessageWidget::addHeaderWidget(const QString& senderName) const
-{
-    _header->setSenderName(senderName);
-    layout()->addWidget(_header);
-}
+    static MessageWidget* createWidget(const MessageData& data);
+};

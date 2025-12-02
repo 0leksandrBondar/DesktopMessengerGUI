@@ -24,12 +24,13 @@
 
 #include "UI/MessageView/ChatViewWidget/chatviewwidget.h"
 
-#include <QEvent>
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QStandardPaths>
 #include <QTextEdit>
+
+#include <qevent.h>
 
 InputMessageField::InputMessageField(QWidget* parent)
     : QWidget(parent),
@@ -109,7 +110,10 @@ void InputMessageField::onSendButtonClicked()
     if (_inputField->toPlainText().isEmpty())
         return;
 
-    emit sendButtonClicked(_inputField->toPlainText());
+    MessageData data;
+    data.textMessage = _inputField->toPlainText();
+
+    emit sendButtonClicked(data);
     _inputField->clear();
 }
 

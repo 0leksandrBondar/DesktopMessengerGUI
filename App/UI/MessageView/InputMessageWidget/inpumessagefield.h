@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "UI/MessageView/ChatViewWidget/chatviewwidget.h"
+
 #include <QWidget>
 
 class QTextEdit;
@@ -34,7 +36,7 @@ public:
     explicit InputMessageField(QWidget* parent = nullptr);
 
 signals:
-    void sendButtonClicked(const QString& smg, bool isMyMsg = true);
+    void sendButtonClicked(const MessageData& smg, bool isMyMsg = true);
 
 private:
     void setupUi();

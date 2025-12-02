@@ -20,44 +20,61 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "messagewidget.h"
-
-#include "footerwidget.h"
-#include "headerwidget.h"
 #include "textwidget.h"
 
+#include <QLabel>
 #include <QVBoxLayout>
 
-MessageWidget::MessageWidget(QWidget* parent)
-    : QWidget(parent), _header{ new HeaderWidget() }, _footer{ new FooterWidget() }
+TextWidget::TextWidget(QWidget* parent) : QWidget(parent), _text{ new QLabel(this) }
 {
     setStyleSheet("border: 0px solid black; background-color: black;");
     initializeLayout();
+    setupLabelStyle();
 }
 
-void MessageWidget::initializeLayout()
+void TextWidget::setText(const QString& text)
+{
+    _text->setText(text);
+
+    const int textWidth = computeTextWidth(text);
+
+    constexpr int minWidth = 50;
+    constexpr int maxWidth = 400;
+
+    const int targetWidth = std::clamp(textWidth, minWidth, maxWidth);
+
+    _text->setMinimumWidth(targetWidth);
+    _text->setMaximumWidth(targetWidth);
+
+    _text->setWordWrap(true);
+
+    updateGeometry();
+}
+
+void TextWidget::initializeLayout()
 {
     const auto mainLayout{ new QVBoxLayout() };
     mainLayout->setSpacing(0);
     mainLayout->setAlignment(Qt::AlignTop);
     mainLayout->setContentsMargins(1, 1, 1, 1);
 
-    mainLayout->addWidget(_header);
+    mainLayout->addWidget(_text);
+
+    _text->setWordWrap(true);
 
     setLayout(mainLayout);
 }
 
-void MessageWidget::addTextWidget(const QString& msgTextData)
+int TextWidget::computeTextWidth(const QString& text) const
 {
-    _text = new TextWidget;
-    _text->setText(msgTextData);
-    layout()->addWidget(_text);
+    QFontMetrics fm(_text->font());
+    return fm.horizontalAdvance(text);
 }
 
-void MessageWidget::addFooterWidget() const { layout()->addWidget(_footer); }
-
-void MessageWidget::addHeaderWidget(const QString& senderName) const
+void TextWidget::setupLabelStyle() const
 {
-    _header->setSenderName(senderName);
-    layout()->addWidget(_header);
+    QFont font;
+    font.setPointSize(12);
+    _text->setFont(font);
+    _text->setWordWrap(true);
 }

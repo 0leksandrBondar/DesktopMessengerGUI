@@ -22,7 +22,13 @@
 
 #pragma once
 
+#include "UI/MessageView/ChatViewWidget/chatviewwidget.h"
+
 #include <QWidget>
+
+class TextWidget;
+class HeaderWidget;
+class FooterWidget;
 
 class QVBoxLayout;
 
@@ -31,17 +37,15 @@ class MessageWidget final : public QWidget
 public:
     explicit MessageWidget(QWidget* parent = nullptr);
 
-    QSize sizeHint() const override;
+    void addFooterWidget() const;
+    void addTextWidget(const QString& msgTextData);
+    void addHeaderWidget(const QString& senderName) const;
 
 private:
-    // ------------------ COMPOSE MESSAGE UI -------------
-
-    void setupUi();
-    void addHeader();
-    void addBody();
-    void addFooter();
+    void initializeLayout();
 
 private:
-    static constexpr int _maxWidth{ 400 };
-    static constexpr int _maxHeight{ 700 };
+    TextWidget* _text{ nullptr };
+    HeaderWidget* _header{ nullptr };
+    FooterWidget* _footer{ nullptr };
 };

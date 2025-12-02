@@ -20,44 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "messagewidget.h"
-
-#include "footerwidget.h"
 #include "headerwidget.h"
-#include "textwidget.h"
 
+#include <QLabel>
 #include <QVBoxLayout>
 
-MessageWidget::MessageWidget(QWidget* parent)
-    : QWidget(parent), _header{ new HeaderWidget() }, _footer{ new FooterWidget() }
+HeaderWidget::HeaderWidget(QWidget* parent) : QWidget(parent), _senderName{ new QLabel() }
 {
-    setStyleSheet("border: 0px solid black; background-color: black;");
     initializeLayout();
+    setupHeaderLabel();
 }
 
-void MessageWidget::initializeLayout()
+void HeaderWidget::setSenderName(const QString& name) const { _senderName->setText(name); }
+
+void HeaderWidget::initializeLayout()
 {
     const auto mainLayout{ new QVBoxLayout() };
     mainLayout->setSpacing(0);
-    mainLayout->setAlignment(Qt::AlignTop);
-    mainLayout->setContentsMargins(1, 1, 1, 1);
+    mainLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    mainLayout->setContentsMargins(10, 1, 1, 1);
 
-    mainLayout->addWidget(_header);
+    mainLayout->addWidget(_senderName);
 
     setLayout(mainLayout);
 }
 
-void MessageWidget::addTextWidget(const QString& msgTextData)
+void HeaderWidget::setupHeaderLabel() const
 {
-    _text = new TextWidget;
-    _text->setText(msgTextData);
-    layout()->addWidget(_text);
-}
-
-void MessageWidget::addFooterWidget() const { layout()->addWidget(_footer); }
-
-void MessageWidget::addHeaderWidget(const QString& senderName) const
-{
-    _header->setSenderName(senderName);
-    layout()->addWidget(_header);
+    QFont font;
+    font.setPointSize(15);
+    font.setBold(true);
+    _senderName->setFont(font);
 }

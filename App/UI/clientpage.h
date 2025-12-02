@@ -35,7 +35,6 @@ public:
 
 private:
     void setupConnections();
-    void setupLayout();
     void setupEmptyMessageViewWidget() const;
     void switchMessageViewWidget() const;
 

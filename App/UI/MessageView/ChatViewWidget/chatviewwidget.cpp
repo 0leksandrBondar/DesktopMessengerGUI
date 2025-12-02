@@ -22,39 +22,27 @@
 
 #include "chatviewwidget.h"
 
+#include "UI/MessageView/MessageWidget/messagewidget.h"
+
 #include <QListWidget>
 #include <QVBoxLayout>
 
-#include <UI/MessageView/MessageWidget/messagewidget.h>
+#include <UI/MessageView/MessageWidget/messagebuilder.h>
 
 ChatViewWidget::ChatViewWidget(QWidget* parent)
     : QWidget(parent), _messageList{ new QListWidget(this) }
 {
     setupUi();
-    addMessage(MessageData(), false);
-}
-
-void ChatViewWidget::addMessage(const QString& msg, const bool isMyMsg)
-{
-    auto item = new QListWidgetItem(msg);
-
-    QFont font = item->font();
-    font.setPointSize(14);
-
-    item->setFont(font);
-    item->setSizeHint(QSize(0, 65));
-
-    const auto hAlign = isMyMsg ? Qt::AlignRight : Qt::AlignLeft;
-    item->setTextAlignment(hAlign | Qt::AlignVCenter);
-
-    _messageList->addItem(item);
 }
 
 void ChatViewWidget::addMessage(const MessageData& msg, const bool isMyMsg)
 {
+    if (msg.textMessage.isEmpty())
+        return;
+
     auto* container = new QWidget();
     auto* item = new QListWidgetItem();
-    auto* widget = new MessageWidget();
+    auto* widget = MessageBuilder::createWidget(msg);
     auto* hLayout = new QHBoxLayout(container);
 
     const auto hAlign = isMyMsg ? Qt::AlignRight : Qt::AlignLeft;
