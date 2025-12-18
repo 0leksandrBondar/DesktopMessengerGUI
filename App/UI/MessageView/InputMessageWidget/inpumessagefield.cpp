@@ -107,11 +107,13 @@ void InputMessageField::setupConnections()
 
 void InputMessageField::onSendButtonClicked()
 {
-    if (_inputField->toPlainText().isEmpty())
-        return;
-
     MessageData data;
-    data.textMessage = _inputField->toPlainText();
+
+    if (!_inputField->toPlainText().isEmpty())
+        data.textMessage = _inputField->toPlainText();
+
+    if (!_filePath.isEmpty())
+        data.filePath = _filePath;
 
     emit sendButtonClicked(data);
     _inputField->clear();
@@ -126,12 +128,11 @@ void InputMessageField::onFileExplorerButtonCLicked()
     static const QString downloadsPath
         = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
 
-    const QString fileName
-        = QFileDialog::getOpenFileName(this, "Select an image", downloadsPath, filter);
+    _filePath = QFileDialog::getOpenFileName(this, "Select an image", downloadsPath, filter);
 
-    if (!fileName.isEmpty())
+    if (!_filePath.isEmpty())
     {
-        qDebug() << "Selected file:" << fileName;
+        qDebug() << "Selected file:" << _filePath;
     }
 }
 void InputMessageField::keyPressEvent(QKeyEvent* event)

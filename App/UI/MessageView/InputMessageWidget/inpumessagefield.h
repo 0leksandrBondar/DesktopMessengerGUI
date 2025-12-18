@@ -53,4 +53,5 @@ private:
     QTextEdit* _inputField{ nullptr };
     QPushButton* _sendButton{ nullptr };
     QPushButton* _fileExplorerButton{ nullptr };
+    QString _filePath;
 };

@@ -22,33 +22,26 @@
 
 #pragma once
 
-#include "UI/MessageView/ChatViewWidget/chatviewwidget.h"
 #include "binarymessagewidget.h"
 
+#include <QLabel>
 #include <QWidget>
 
-class TextWidget;
-class HeaderWidget;
-class FooterWidget;
-
-class QVBoxLayout;
-
-class MessageWidget final : public QWidget
+class PhotoWidget final : public BinaryMessageWidget
 {
 public:
-    explicit MessageWidget(QWidget* parent = nullptr);
+    explicit PhotoWidget(QWidget* parent = nullptr, const QString& fileName = QString());
 
-    void addFooterWidget() const;
-    void addBinaryWidget(const QString& filePath);
-    void addTextWidget(const QString& msgTextData);
-    void addHeaderWidget(const QString& senderName) const;
+    void loadImage(const QString &filePath);
 
 private:
     void initializeLayout();
 
+    void createImage(const QString& fileName);
+
+    void mousePressEvent(QMouseEvent* event) override;
+
 private:
-    TextWidget* _text{ nullptr };
-    HeaderWidget* _header{ nullptr };
-    FooterWidget* _footer{ nullptr };
-    BinaryMessageWidget* _binary{ nullptr };
+    QLabel* _imageLabel;
+    QWidget* _popupDisplay;
 };

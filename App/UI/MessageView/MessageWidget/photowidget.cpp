@@ -20,62 +20,65 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "messagewidget.h"
-
-#include "footerwidget.h"
-#include "headerwidget.h"
 #include "photowidget.h"
-#include "textwidget.h"
 
+#include <QFileInfo>
 #include <QVBoxLayout>
 
-#include <qfileinfo.h>
+#include <qevent.h>
 
-MessageWidget::MessageWidget(QWidget* parent)
-    : QWidget(parent), _header{ new HeaderWidget() }, _footer{ new FooterWidget() }
+PhotoWidget::PhotoWidget(QWidget* parent, const QString& fileName) : _imageLabel{ new QLabel }
 {
-    setStyleSheet("border: 0px solid black; background-color: black;");
     initializeLayout();
+
+    setStyleSheet("border: 0px solid black; background-color: red;");
+
+    setMinimumSize(400, 200);
+
+    if (!fileName.isEmpty())
+        createImage(fileName);
 }
 
-void MessageWidget::initializeLayout()
+void PhotoWidget::loadImage(const QString& filePath) { createImage(filePath); }
+
+void PhotoWidget::initializeLayout()
 {
     const auto mainLayout{ new QVBoxLayout() };
     mainLayout->setSpacing(0);
     mainLayout->setAlignment(Qt::AlignTop);
     mainLayout->setContentsMargins(1, 1, 1, 1);
 
-    mainLayout->addWidget(_header);
-
     setLayout(mainLayout);
 }
 
-void MessageWidget::addTextWidget(const QString& msgTextData)
+void PhotoWidget::createImage(const QString& fileName)
 {
-    _text = new TextWidget;
-    _text->setText(msgTextData);
-    layout()->addWidget(_text);
-}
-
-void MessageWidget::addFooterWidget() const { layout()->addWidget(_footer); }
-
-void MessageWidget::addBinaryWidget(const QString& filePath)
-{
-    static const QSet<QString> imageExts
-        = { "png", "jpg", "jpeg", "bmp", "gif", "webp", "tiff", "tif", "heic", "heif" };
-
-    QString ext = QFileInfo(filePath).suffix().toLower();
-    if (imageExts.contains(ext))
+    QPixmap pixmap;
+    if (!pixmap.load(fileName))
     {
-        auto* photo = new PhotoWidget(this);
-        photo->loadImage(filePath);
-        _binary = photo;
-        layout()->addWidget(_binary);
+        qWarning() << "Failed to load image:" << fileName;
+        return;
     }
+
+    _imageLabel->setMinimumSize(400, 300);
+    _imageLabel->setMaximumSize(400, 700);
+
+    QPixmap scaled
+        = pixmap.scaled(_imageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    _imageLabel->setPixmap(scaled);
+    _imageLabel->setAlignment(Qt::AlignCenter);
+
+    layout()->addWidget(_imageLabel);
 }
 
-void MessageWidget::addHeaderWidget(const QString& senderName) const
+void PhotoWidget::mousePressEvent(QMouseEvent* event)
 {
-    _header->setSenderName(senderName);
-    layout()->addWidget(_header);
+    if (event->button() == Qt::LeftButton)
+    {
+        _popupDisplay = new QWidget();
+        _popupDisplay->setWindowFlags(Qt::Popup);
+        _popupDisplay->setWindowOpacity(0.5);
+        _popupDisplay->showFullScreen();
+    }
 }

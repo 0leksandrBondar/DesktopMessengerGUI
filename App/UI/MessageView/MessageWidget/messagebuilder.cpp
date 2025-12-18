@@ -30,6 +30,9 @@ MessageWidget* MessageBuilder::createWidget(const MessageData& data)
 
     msgWidget->addHeaderWidget("Alex");
 
+     if (!data.filePath.isEmpty())
+         msgWidget->addBinaryWidget(data.filePath);
+
     if (!data.textMessage.isEmpty())
         msgWidget->addTextWidget(data.textMessage);
 
