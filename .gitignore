@@ -8,6 +8,7 @@
 *.so.*
 *.dll
 *.dylib
+.idea
 
 /.qmake.cache
 /.qmake.stash

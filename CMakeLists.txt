@@ -18,5 +18,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/Cmake/FetchDependencies.cmake)
 add_subdirectory(Dependencies)
 add_subdirectory(App)
+
+add_subdirectory(Libs)
